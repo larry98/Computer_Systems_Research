@@ -48,7 +48,7 @@ class MyListener(StreamListener):
 
 	def __init__(self, num):
 		super(MyListener, self).__init__()
-		self.fout = open('tweets%d.json' %num, 'a')
+		self.fout = open('data/raw_tweets/tweets%d.json' %num, 'a')
 		self.counter = 0
 		self.buffer_size = 1000
 
