@@ -3,7 +3,7 @@
 
 from peewee import *
 
-db = SqliteDatabase(DATABASE)
+db = SqliteDatabase("twitter.db")
 
 
 class BaseModel(Model):
