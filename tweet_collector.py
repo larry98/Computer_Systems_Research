@@ -81,8 +81,6 @@ if __name__ == "__main__":
 	auth.set_access_token(key['ACCESS_TOKEN'], key['ACCESS_TOKEN_SECRET'])
 
 	twitterStream = Stream(auth, MyListener(num=i+1))
-	twitterStream.filter(track=key_words, languages=['en'])
-	'''
 	while True:
 		try:
 			print('connecting ...')
@@ -90,4 +88,3 @@ if __name__ == "__main__":
 		except BaseException as e:
 			print("Error: %s" %str(e))
 			time.sleep(60)
-	'''
