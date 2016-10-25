@@ -48,9 +48,7 @@ class MyListener(StreamListener):
 
 	def __init__(self, num):
 		super(MyListener, self).__init__()
-		self.fout = open('data/raw_tweets/tweets%d.json' %num, 'a')
-		self.counter = 0
-		self.buffer_size = 1000
+		self.num = num
 
 	def on_connect(self):
 		print("Connected")
@@ -60,21 +58,19 @@ class MyListener(StreamListener):
 			tweet = parse_tweet(status._json)
 			if tweet == None:
 				return True
-			self.fout.write(tweet)
-			self.counter += 1
-			if self.counter >= self.buffer_size:
-				self.fout.flush()
-				os.fsync(self.fout.fileno())
-				self.counter = 0
+			fout = open('data/raw_tweets/%s-tweets%d.json' 
+				%(str(datetime.datetime.now().date()), self.num), 'a')
+			fout.write(tweet)
+			fout.close()
 			return True
 		except BaseException as e:
-			print("Error on status: %s" %str(e))
-			time.sleep(5)
-			return True
+			print("Error on_status: %s" %str(e))
+			return False
 
 	def on_error(self, status):
 		print("Error #: %s" %str(status))
-		return False
+		time.sleep(5)
+		return True
 
 
 if __name__ == "__main__":
@@ -84,10 +80,14 @@ if __name__ == "__main__":
 	auth = OAuthHandler(key['API_KEY'], key['API_SECRET'])
 	auth.set_access_token(key['ACCESS_TOKEN'], key['ACCESS_TOKEN_SECRET'])
 
+	twitterStream = Stream(auth, MyListener(num=i+1))
+	twitterStream.filter(track=key_words, languages=['en'])
+	'''
 	while True:
 		try:
-			twitterStream = Stream(auth, MyListener(num=i+1))
+			print('connecting ...')
 			twitterStream.filter(track=key_words, languages=['en'])
 		except BaseException as e:
 			print("Error: %s" %str(e))
 			time.sleep(60)
+	'''
